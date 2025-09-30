@@ -85,6 +85,7 @@
         <input id="apiKey" class="input" type="password" placeholder="API Key（app-...）" />
         <button id="toggleKey" class="btn ghost" title="显示/隐藏 API Key">显示</button>
         <button id="saveBtn" class="btn">保存</button>
+        <button id="useProxyBtn" class="btn ghost" title="把 API URL 设为本站代理 /api">用本站代理</button>
         <button id="newChatBtn" class="btn ghost" title="开始新会话">新会话</button>
       </div>
       <div class="top-actions">
@@ -127,6 +128,7 @@
     const exportBtn = el('exportBtn');
     const importBtn = el('importBtn');
     const clearAllBtn = el('clearAllBtn');
+    const useProxyBtn = el('useProxyBtn'); // 仍保留按钮，便于一键设置 /api
 
     let controller = null; // AbortController for streaming cancel
 
@@ -137,8 +139,8 @@
       localStorage.setItem('dify-user-id', userId);
     }
 
-    // 读取配置
-    apiUrlEl.value = localStorage.getItem('dify-api-url') || '';
+    // 读取配置（默认走本站 /api 代理）
+    apiUrlEl.value = localStorage.getItem('dify-api-url') || '/api';
     apiKeyEl.value = localStorage.getItem('dify-api-key') || '';
 
     // 会话与记录
@@ -155,9 +157,17 @@
     }
 
     function saveConfig() {
-      const url = apiUrlEl.value.trim();
-      const key = apiKeyEl.value.trim();
-      if (!url || !key) { toast('请填写 API URL 与 API Key'); return; }
+      const url = (apiUrlEl.value || '').trim() || '/api'; // 保底用 /api
+      const key = (apiKeyEl.value || '').trim();
+      if (!key) { toast('请填写 API Key'); return; }
+      // 若在 HTTPS 页面上却手写了 http://，给出提示但仍允许保存
+      if (location.protocol === 'https:' && url.startsWith('http://')) {
+        toast('提示：建议改为 /api 使用本站代理，避免混合内容');
+      }
+      localStorage.setItem('dify-api-url', url);
+      localStorage.setItem('dify-api-key', key);
+      toast('配置已保存');
+    }
       localStorage.setItem('dify-api-url', url);
       localStorage.setItem('dify-api-key', key);
       toast('配置已保存');
@@ -231,6 +241,12 @@
     toggleKeyBtn.onclick = () => {
       apiKeyEl.type = apiKeyEl.type === 'password' ? 'text' : 'password';
       toggleKeyBtn.textContent = apiKeyEl.type === 'password' ? '显示' : '隐藏';
+    };
+
+    // 一键把 API URL 设置为当前域的 /api（用于 Zeabur/反向代理）
+    useProxyBtn.onclick = () => {
+      apiUrlEl.value = '/api';
+      toast(`已设置 API URL: /api`);
     };
 
     newChatBtn.onclick = () => {
