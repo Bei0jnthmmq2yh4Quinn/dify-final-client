@@ -9,12 +9,11 @@
     header, footer { background: #fff; padding: 10px; border-bottom: 1px solid #ddd; }
     .wrap { max-width: 960px; margin: 0 auto; display: flex; gap: 8px; align-items: center; }
     .chat { max-width: 800px; margin: 20px auto; padding: 0 10px; display: flex; flex-direction: column; gap: 10px; }
-    .bubble { padding: 10px 14px; border-radius: 14px; max-width: 75%; }
+    .bubble { padding: 10px 14px; border-radius: 14px; max-width: 75%; word-break: break-word; }
     .bubble.user { background: #3b82f6; color: #fff; align-self: flex-end; }
     .bubble.bot { background: #fff; color: #111; border: 1px solid #eee; align-self: flex-start; }
     .bubble.error { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; align-self: center; }
-    .toolbar { margin-top: 6px; }
-    textarea { width: 100%; min-height: 40px; padding: 8px; }
+    textarea { width: 100%; min-height: 40px; padding: 8px; resize: vertical; }
     button { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; }
     .btn { background: #3b82f6; color: #fff; }
     .btn.danger { background: #ef4444; color: #fff; }
@@ -23,8 +22,8 @@
 <body>
   <header>
     <div class="wrap">
-      <h1>Dify API 对话客户端 <small>(增强版)</small></h1>
-      <input id="apiUrl" placeholder="API Base URL" style="flex:1;padding:6px" />
+      <h1 style="margin:0;font-size:18px;">Dify API 对话客户端 <small>(增强版)</small></h1>
+      <input id="apiUrl" placeholder="API Base URL (默认 /api)" style="flex:1;padding:6px" />
       <input id="apiKey" type="password" placeholder="API Key (app-...)" style="padding:6px" />
       <button id="toggleKey">显示</button>
       <button id="saveBtn" class="btn">保存</button>
@@ -56,7 +55,7 @@
     const toggleKeyBtn = el('toggleKey');
     const useProxyBtn = el('useProxyBtn');
 
-    // 默认读取配置：API URL = /api
+    // 默认配置
     apiUrlEl.value = localStorage.getItem('dify-api-url') || '/api';
     apiKeyEl.value = localStorage.getItem('dify-api-key') || '';
 
@@ -148,7 +147,12 @@
 
     sendBtn.onclick = send;
     stopBtn.onclick = () => { controller?.abort(); toast('已停止'); };
-    msgEl.addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){e.preventDefault(); send();} });
+    msgEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        send();
+      }
+    });
   </script>
 </body>
 </html>
