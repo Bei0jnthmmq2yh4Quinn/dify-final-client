@@ -5,95 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dify API 对话客户端（增强版）</title>
   <style>
-    :root {
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --text: #2c3e50;
-      --muted: #606f7b;
-      --primary: #3b82f6;
-      --primary-600: #2563eb;
-      --danger: #ef4444;
-      --danger-600: #dc2626;
-      --border: #e5e7eb;
-      --chip: #f3f4f6;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: var(--bg); color: var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      height: 100vh; display: grid; grid-template-rows: auto 1fr auto;
-    }
-    header {
-      position: sticky; top: 0; z-index: 10; background: var(--card);
-      border-bottom: 1px solid var(--border); box-shadow: 0 1px 0 rgba(0,0,0,.02);
-    }
-    .wrap { max-width: 980px; margin: 0 auto; padding: 12px 16px; }
-    .row { display:flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    h1 { font-size: 16px; margin: 0 8px 0 0; font-weight: 700; color: var(--text); }
-
-    .input, .select {
-      height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px;
-      background: #fff; outline: none; min-width: 240px; color: var(--text);
-    }
-    .input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
-    .btn { height: 36px; padding: 0 12px; border: none; border-radius: 10px; cursor: pointer; color: #fff; background: var(--primary); }
-    .btn:hover { background: var(--primary-600); }
-    .btn.ghost { background: #fff; color: var(--text); border: 1px solid var(--border); }
-    .btn.danger { background: var(--danger); }
-    .btn.danger:hover { background: var(--danger-600); }
-    .chip { padding: 6px 10px; border-radius: 999px; background: var(--chip); color: var(--muted); font-size: 12px; }
-
-    main { overflow: auto; }
-    .chat { max-width: 820px; margin: 16px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
-
-    .bubble { max-width: 80%; padding: 12px 14px; border-radius: 16px; line-height: 1.6; box-shadow: 0 1px 1px rgba(0,0,0,.04);
-      position: relative; word-wrap: break-word; }
-    .bubble.user { align-self: flex-end; background: var(--primary); color:#fff; border-bottom-right-radius: 6px; }
-    .bubble.bot { align-self: flex-start; background: #fff; color: var(--text); border-bottom-left-radius: 6px; }
-    .bubble.error { align-self: center; background: #fef2f2; color: var(--danger); border: 1px solid #fee2e2; }
-
-    .toolbar { display:flex; gap:6px; position:absolute; right:8px; bottom:8px; opacity:.0; transition:.2s; }
-    .bubble:hover .toolbar { opacity:1; }
-    .toolbtn { font-size: 12px; padding: 2px 8px; border-radius: 8px; border: 1px solid var(--border); background:#fff; color: var(--muted); cursor:pointer; }
-
-    .typing { display:inline-flex; gap:4px; align-items:center; }
-    .dot { width:6px; height:6px; border-radius:999px; background:#cbd5e1; animation: blink 1.2s infinite; }
-    .dot:nth-child(2){ animation-delay:.2s } .dot:nth-child(3){ animation-delay:.4s }
-    @keyframes blink { 0%,80%,100% { opacity:.2 } 40% { opacity:1 } }
-
-    footer {
-      background: var(--card); border-top: 1px solid var(--border);
-    }
-    .composer { max-width: 980px; margin: 0 auto; padding: 12px 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px; }
-    textarea.input { min-height: 48px; resize: vertical; padding: 10px 12px; line-height: 1.5; }
-
-    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; background:#111827; color:#e5e7eb; padding:.6em .8em; border-radius: 10px; overflow:auto; }
-    pre { margin: .4em 0; }
-    code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; background: #f3f4f6; padding: .1em .3em; border-radius: 6px; }
-    .link { color: var(--primary-600); text-decoration: underline; }
-
-    .top-actions { display:flex; gap:8px; align-items:center; margin-top:8px; flex-wrap: wrap; }
-    .grow { flex:1 }
+    body { font-family: sans-serif; margin: 0; background: #f5f7fb; }
+    header, footer { background: #fff; padding: 10px; border-bottom: 1px solid #ddd; }
+    .wrap { max-width: 960px; margin: 0 auto; display: flex; gap: 8px; align-items: center; }
+    .chat { max-width: 800px; margin: 20px auto; padding: 0 10px; display: flex; flex-direction: column; gap: 10px; }
+    .bubble { padding: 10px 14px; border-radius: 14px; max-width: 75%; }
+    .bubble.user { background: #3b82f6; color: #fff; align-self: flex-end; }
+    .bubble.bot { background: #fff; color: #111; border: 1px solid #eee; align-self: flex-start; }
+    .bubble.error { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; align-self: center; }
+    .toolbar { margin-top: 6px; }
+    textarea { width: 100%; min-height: 40px; padding: 8px; }
+    button { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; }
+    .btn { background: #3b82f6; color: #fff; }
+    .btn.danger { background: #ef4444; color: #fff; }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap">
-      <div class="row">
-        <h1>Dify API 对话客户端 <span class="chip">增强版</span></h1>
-        <input id="apiUrl" class="input grow" placeholder="API Base URL（例如：https://your-domain/v1）" />
-        <input id="apiKey" class="input" type="password" placeholder="API Key（app-...）" />
-        <button id="toggleKey" class="btn ghost" title="显示/隐藏 API Key">显示</button>
-        <button id="saveBtn" class="btn">保存</button>
-        <button id="useProxyBtn" class="btn ghost" title="把 API URL 设为本站代理 /api">用本站代理</button>
-        <button id="newChatBtn" class="btn ghost" title="开始新会话">新会话</button>
-      </div>
-      <div class="top-actions">
-        <span class="chip">历史将保存在本地，仅此浏览器可见</span>
-        <button id="exportBtn" class="btn ghost">导出聊天（JSON）</button>
-        <button id="importBtn" class="btn ghost">导入聊天</button>
-        <button id="clearAllBtn" class="btn danger">清除本地数据</button>
-      </div>
+      <h1>Dify API 对话客户端 <small>(增强版)</small></h1>
+      <input id="apiUrl" placeholder="API Base URL" style="flex:1;padding:6px" />
+      <input id="apiKey" type="password" placeholder="API Key (app-...)" style="padding:6px" />
+      <button id="toggleKey">显示</button>
+      <button id="saveBtn" class="btn">保存</button>
+      <button id="useProxyBtn" class="btn">用本站代理</button>
     </div>
   </header>
 
@@ -102,294 +37,118 @@
   </main>
 
   <footer>
-    <div class="composer">
-      <textarea id="msg" class="input" placeholder="输入你的问题...（Enter 发送 / Shift+Enter 换行）" autocomplete="off"></textarea>
-      <div style="display:flex; gap:8px; align-items:center;">
-        <button id="send" class="btn">发送</button>
-        <button id="stop" class="btn danger" disabled>停止</button>
-      </div>
+    <div class="wrap">
+      <textarea id="msg" placeholder="输入你的问题... (Enter 发送 / Shift+Enter 换行)"></textarea>
+      <button id="send" class="btn">发送</button>
+      <button id="stop" class="btn danger" disabled>停止</button>
     </div>
   </footer>
 
   <script>
-    // ====== 基础状态 ======
-    const el = (id) => document.getElementById(id);
+    const el = id => document.getElementById(id);
     const chatEl = el('chat');
     const msgEl = el('msg');
-    const sendBtn = el('send');
-    const stopBtn = el('stop');
-
     const apiUrlEl = el('apiUrl');
     const apiKeyEl = el('apiKey');
-
+    const sendBtn = el('send');
+    const stopBtn = el('stop');
     const saveBtn = el('saveBtn');
-    const newChatBtn = el('newChatBtn');
     const toggleKeyBtn = el('toggleKey');
-    const exportBtn = el('exportBtn');
-    const importBtn = el('importBtn');
-    const clearAllBtn = el('clearAllBtn');
-    const useProxyBtn = el('useProxyBtn'); // 仍保留按钮，便于一键设置 /api
+    const useProxyBtn = el('useProxyBtn');
 
-    let controller = null; // AbortController for streaming cancel
-
-    // 用户 ID（持久化）
-    let userId = localStorage.getItem('dify-user-id');
-    if (!userId) {
-      userId = `user-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-      localStorage.setItem('dify-user-id', userId);
-    }
-
-    // 读取配置（默认走本站 /api 代理）
+    // 默认读取配置：API URL = /api
     apiUrlEl.value = localStorage.getItem('dify-api-url') || '/api';
     apiKeyEl.value = localStorage.getItem('dify-api-key') || '';
 
-    // 会话与记录
-    let conversationId = localStorage.getItem('dify-conversation-id') || null;
-    let history = JSON.parse(localStorage.getItem('dify-history') || '[]'); // [{role, content}]
+    function toast(msg) { alert(msg); }
 
-    // ====== 工具函数 ======
-    function saveHistory() {
-      localStorage.setItem('dify-history', JSON.stringify(history));
-    }
-    function setConversationId(id) {
-      conversationId = id;
-      if (id) localStorage.setItem('dify-conversation-id', id); else localStorage.removeItem('dify-conversation-id');
-    }
-
-    function saveConfig() {
-      const url = (apiUrlEl.value || '').trim() || '/api'; // 保底用 /api
-      const key = (apiKeyEl.value || '').trim();
-      if (!key) { toast('请填写 API Key'); return; }
-      // 若在 HTTPS 页面上却手写了 http://，给出提示但仍允许保存
-      if (location.protocol === 'https:' && url.startsWith('http://')) {
-        toast('提示：建议改为 /api 使用本站代理，避免混合内容');
-      }
-      localStorage.setItem('dify-api-url', url);
-      localStorage.setItem('dify-api-key', key);
-      toast('配置已保存');
-    }
-      localStorage.setItem('dify-api-url', url);
-      localStorage.setItem('dify-api-key', key);
-      toast('配置已保存');
-    }
-
-    function toast(text) {
-      const t = document.createElement('div');
-      t.textContent = text; t.style.position='fixed'; t.style.bottom='16px'; t.style.left='50%'; t.style.transform='translateX(-50%)';
-      t.style.background='#111827'; t.style.color='#fff'; t.style.padding='8px 12px'; t.style.borderRadius='10px'; t.style.fontSize='12px'; t.style.boxShadow='0 4px 20px rgba(0,0,0,.2)';
-      document.body.appendChild(t); setTimeout(()=>t.remove(), 1600);
-    }
-
-    function addBubble(role, html, opts={}) {
+    function addBubble(role, text) {
       const div = document.createElement('div');
-      div.className = `bubble ${role}`;
-      div.innerHTML = html;
-      if (role !== 'error') {
-        const bar = document.createElement('div');
-        bar.className = 'toolbar';
-        const btnCopy = document.createElement('button');
-        btnCopy.className = 'toolbtn'; btnCopy.textContent = '复制';
-        btnCopy.onclick = () => copyPlainText(div.innerText);
-        bar.appendChild(btnCopy);
-        div.appendChild(bar);
-      }
+      div.className = 'bubble ' + role;
+      div.innerText = text;
       chatEl.appendChild(div);
       chatEl.scrollTop = chatEl.scrollHeight;
       return div;
     }
 
-    function copyPlainText(text) { navigator.clipboard?.writeText(text).then(()=>toast('已复制')).catch(()=>toast('复制失败')); }
-
-    // 极简 Markdown 渲染（支持：```块、行内`code`、**bold**、*italic*、链接、换行）
-    function md2html(s) {
-      if (!s) return '';
-      // 转义 HTML
-      s = s.replace(/[&<>]/g, (c)=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-      // 代码块 ```
-      s = s.replace(/```([\s\S]*?)```/g, (m, p1)=>`<pre class="kbd"><code>${p1.replace(/\n/g,'\n')}</code></pre>`);
-      // 行内代码
-      s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
-      // 加粗/斜体
-      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-      s = s.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-      // 链接
-      s = s.replace(/\b(https?:\/\/[^\s)]+)\b/g, '<a class="link" href="$1" target="_blank" rel="noopener">$1</a>');
-      // 换行
-      s = s.replace(/\n/g, '<br/>' );
-      return s;
+    function saveConfig() {
+      const url = (apiUrlEl.value || '').trim() || '/api';
+      const key = (apiKeyEl.value || '').trim();
+      if (!key) { toast('请填写 API Key'); return; }
+      localStorage.setItem('dify-api-url', url);
+      localStorage.setItem('dify-api-key', key);
+      toast('配置已保存');
     }
 
-    function typingBubble() {
-      return '<span class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>';
-    }
-
-    function setUIBusy(busy) {
-      msgEl.disabled = busy; sendBtn.disabled = busy; stopBtn.disabled = !busy;
-      if (!busy) msgEl.focus();
-    }
-
-    function restoreHistory() {
-      chatEl.innerHTML = '';
-      history.forEach(item => addBubble(item.role === 'user' ? 'user' : 'bot', item.role==='user' ? md2html(item.content) : md2html(item.content)));
-    }
-
-    // 初始渲染
-    restoreHistory();
-
-    // ====== 事件绑定 ======
     saveBtn.onclick = saveConfig;
     toggleKeyBtn.onclick = () => {
       apiKeyEl.type = apiKeyEl.type === 'password' ? 'text' : 'password';
       toggleKeyBtn.textContent = apiKeyEl.type === 'password' ? '显示' : '隐藏';
     };
-
-    // 一键把 API URL 设置为当前域的 /api（用于 Zeabur/反向代理）
     useProxyBtn.onclick = () => {
       apiUrlEl.value = '/api';
-      toast(`已设置 API URL: /api`);
+      toast('已设置 API URL: /api');
     };
 
-    newChatBtn.onclick = () => {
-      history = []; saveHistory();
-      setConversationId(null);
-      restoreHistory();
-      addBubble('bot', md2html('新会话已开始。'));
-    };
+    let controller = null;
 
-    clearAllBtn.onclick = () => {
-      if (!confirm('确定要清除本地缓存的数据（配置、历史、会话）吗？此操作不可恢复。')) return;
-      localStorage.removeItem('dify-api-url');
-      localStorage.removeItem('dify-api-key');
-      localStorage.removeItem('dify-history');
-      localStorage.removeItem('dify-conversation-id');
-      toast('已清除');
-      setTimeout(()=>location.reload(), 400);
-    };
-
-    exportBtn.onclick = () => {
-      const data = { userId, conversationId, history, exportedAt: new Date().toISOString() };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = `dify-chat-${Date.now()}.json`; a.click(); URL.revokeObjectURL(url);
-    };
-
-    importBtn.onclick = async () => {
-      const inp = document.createElement('input'); inp.type = 'file'; inp.accept = 'application/json';
-      inp.onchange = async () => {
-        const file = inp.files?.[0]; if (!file) return;
-        const text = await file.text();
-        try {
-          const data = JSON.parse(text);
-          history = Array.isArray(data.history) ? data.history : [];
-          setConversationId(data.conversationId || null);
-          saveHistory(); restoreHistory();
-          toast('导入成功');
-        } catch { toast('导入失败：JSON 格式不正确'); }
-      };
-      inp.click();
-    };
-
-    msgEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-    });
-    sendBtn.onclick = () => send();
-    stopBtn.onclick = () => { controller?.abort(); toast('已停止'); };
-
-    // ====== 发送消息 ======
     async function send() {
       const query = msgEl.value.trim();
       if (!query) return;
-      const apiUrl = (apiUrlEl.value || '').trim();
+      const apiUrl = (apiUrlEl.value || '').trim() || '/api';
       const apiKey = (apiKeyEl.value || '').trim();
       if (!apiUrl || !apiKey) { toast('请先配置 API 信息'); return; }
 
-      // UI & 历史
-      addBubble('user', md2html(query));
-      history.push({ role: 'user', content: query });
-      saveHistory();
+      addBubble('user', query);
       msgEl.value = '';
-
-      const botDiv = addBubble('bot', typingBubble());
-      setUIBusy(true);
+      const botDiv = addBubble('bot', '...');
+      sendBtn.disabled = true; stopBtn.disabled = false;
 
       try {
         controller = new AbortController();
         const resp = await fetch(`${apiUrl.replace(/\/$/, '')}/chat-messages`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-          body: JSON.stringify({ inputs: {}, query, response_mode: 'streaming', user: userId, conversation_id: conversationId || '' }),
-          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({ query, inputs:{}, response_mode:'streaming', user:'web-user' }),
+          signal: controller.signal
         });
 
-        if (!resp.ok || !resp.body) {
-          let msg = `HTTP ${resp.status}`;
-          try { const err = await resp.json(); if (err?.message) msg = err.message; } catch {}
-          throw new Error(msg);
-        }
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 
         const reader = resp.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let buffer = '';
-        let answer = '';
-
+        const decoder = new TextDecoder();
+        let buffer = '', answer = '';
         while (true) {
-          const { done, value } = await reader.read();
+          const {done, value} = await reader.read();
           if (done) break;
-          buffer += decoder.decode(value, { stream: true });
-          const chunks = buffer.split('\n\n');
-          buffer = chunks.pop();
-          for (const chunk of chunks) {
-            if (!chunk.startsWith('data: ')) continue;
-            const json = chunk.slice(6);
-            try {
-              const data = JSON.parse(json);
-              if (data.event === 'message' || data.event === 'agent_message') {
-                answer += data.answer || '';
-                botDiv.innerHTML = md2html(answer);
-                chatEl.scrollTop = chatEl.scrollHeight;
-              } else if (data.event === 'message_end') {
-                if (data.conversation_id && !conversationId) setConversationId(data.conversation_id);
-              } else if (data.event === 'error' && data?.message) {
-                throw new Error(data.message);
-              }
-            } catch (e) { /* 忽略解析错误，继续流 */ }
+          buffer += decoder.decode(value, {stream:true});
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop();
+          for (const part of parts) {
+            if (!part.startsWith('data: ')) continue;
+            const data = JSON.parse(part.slice(6));
+            if (data.event === 'message') {
+              answer += data.answer || '';
+              botDiv.innerText = answer;
+            }
           }
         }
-
-        // flush buffer
-        if (buffer.startsWith('data: ')) {
-          try {
-            const data = JSON.parse(buffer.slice(6));
-            if (data.event === 'message' || data.event === 'agent_message') {
-              answer += data.answer || '';
-            }
-            if (data.event === 'message_end' && data.conversation_id && !conversationId) setConversationId(data.conversation_id);
-          } catch {}
-        }
-
-        botDiv.innerHTML = answer ? md2html(answer) : md2html('（无内容）');
-        history.push({ role: 'assistant', content: answer });
-        saveHistory();
-
-      } catch (err) {
-        // 细化前端错误信息，便于排查
-        let hints = '';
-        if (err.message.includes('Failed to fetch')) {
-          hints = '\n\n可能原因：\n- API 地址不可达 / 端口错误\n- 后端未开启 CORS（跨域）\n- 自签名或无效 HTTPS 证书\n- 网络中断或被浏览器拦截（如混合内容）';
-        }
-        const msg = err?.name === 'AbortError' ? '已手动停止生成' : `出错了：${err.message || err}` + hints;
+        botDiv.innerText = answer || '(无内容)';
+      } catch(e) {
         botDiv.classList.add('error');
-        botDiv.innerHTML = md2html(msg) + ` <button class="toolbtn" id="retryBtn">重试</button>`;
-        document.getElementById('retryBtn')?.addEventListener('click', () => {
-          // 取最近一条用户消息重发
-          const lastUser = [...history].reverse().find(x => x.role === 'user');
-          if (lastUser) { msgEl.value = lastUser.content; send(); }
-        });
+        botDiv.innerText = '出错了: ' + e.message;
       } finally {
-        setUIBusy(false);
+        sendBtn.disabled = false; stopBtn.disabled = true;
         controller = null;
       }
     }
+
+    sendBtn.onclick = send;
+    stopBtn.onclick = () => { controller?.abort(); toast('已停止'); };
+    msgEl.addEventListener('keydown', e => { if(e.key==='Enter' && !e.shiftKey){e.preventDefault(); send();} });
   </script>
 </body>
 </html>
